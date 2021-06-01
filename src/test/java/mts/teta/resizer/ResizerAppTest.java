@@ -3,17 +3,13 @@ package mts.teta.resizer;
 import mts.teta.resizer.imageprocessor.BadAttributesException;
 import org.junit.jupiter.api.Test;
 
-import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import static mts.teta.resizer.utils.MD5.getMD5;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ResizerAppTest {
@@ -180,15 +176,15 @@ class ResizerAppTest {
         ResizerApp app = new ResizerApp();
         app.setInputPath(absolutePathInput + typo);
         app.setOutputPath(absolutePathOutput);
-        IIOException generatedException = null;
+        BadAttributesException  generatedException = null;
         try {
             app.call();
-        } catch (IIOException e) {
+        } catch (BadAttributesException e) {
             generatedException = e;
         }
 
         assertEquals("Can't read input file!", generatedException.getMessage());
-        assertEquals(IIOException.class, generatedException.getClass());
+        assertEquals(BadAttributesException.class, generatedException.getClass());
     }
 
     @Test

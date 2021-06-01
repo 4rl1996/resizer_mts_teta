@@ -1,37 +1,16 @@
 package mts.teta.resizer;
 
-
 import mts.teta.resizer.imageprocessor.BadAttributesException;
+import mts.teta.resizer.imageprocessor.ImageProcessor;
 import picocli.CommandLine;
 
 import javax.imageio.ImageIO;
 import java.io.File;
-
 import java.util.concurrent.Callable;
 
-//@CommandLine.Command(name = "resizer", mixinStandardHelpOptions = true, version = "resizer 0.0.1", description = "...")
+@CommandLine.Command(name = "resizer", mixinStandardHelpOptions = true,
+        version = "https://github.com/4rl1996/resizer_mts_teta.git", description = "Available formats: jpeg png webp")
 public class ResizerApp extends ConsoleAttributes implements Callable<Integer> {
-
-//    @CommandLine.Parameters(index = "0")
-//    private String inputPath;
-//
-//    @CommandLine.Parameters(index = "1")
-//    private String outputPath;
-//
-//    @CommandLine.Option(names = {"--resize"}, arity = "2", description = "")
-//    private List<Integer> resizeArgs; // width height
-//
-//    @CommandLine.Option(names = {"--crop"}, arity = "4", description = "")
-//    private List<Integer> cropArgs; //cropWidth, cropHeight, cropX, cropY;
-//
-//    @CommandLine.Option(names = "--quality", description = "compression level")
-//    private Integer qualityValue;
-//
-//    @CommandLine.Option(names = "--blur", description = "blur radius")
-//    private Integer blurRadius;
-//
-//    @CommandLine.Option(names = "--format", description = "output format")
-//    private String outputFormat;
 
 
     public static void main(String... args) {
@@ -46,79 +25,62 @@ public class ResizerApp extends ConsoleAttributes implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        if (getQualityValue() != null && (getQualityValue() < 0 || getQualityValue() > 100)) throw new BadAttributesException("Please check params!");
+        String input = (getInputPath());
+        boolean endingJpg = input.endsWith(".jpg");
+        boolean endingJpeg = input.endsWith(".jpeg");
+        boolean endingPng = input.endsWith(".png");
+        boolean endingWebp = input.endsWith(".webp");
 
+        if (!endingJpg && !endingJpeg && !endingPng && !endingWebp) {
+            throw new BadAttributesException("Can't read input file!");
+        }
 
-//        String inputFormat = new String(getInputPath()); //todo
-//        boolean endingJpg;
-//        endingJpg = inputFormat.endsWith();
-//        boolean endingJpeg;
+        if (getQualityValue() != null && (getQualityValue() < 0 || getQualityValue() > 100)) {
+            throw new BadAttributesException("Please check params!");
+        }
 
+        if (getCropArgs() != null) {
+            if (getCropArgs().size() < 4) {
+                throw new BadAttributesException("Please check params!");
+            } else {
+                Integer cropWidth = getCropArgs().get(0);
+                Integer cropHeight = getCropArgs().get(1);
+                Integer cropX = getCropArgs().get(2);
+                Integer cropY = getCropArgs().get(3);
+                if (cropWidth < 1 || cropHeight < 1 || cropX < 0 || cropY < 0) {
+                    throw new BadAttributesException("Please check params!");
+                }
+            }
+        }
 
+        if (getResizeArgs() != null) {
+            if (getResizeArgs().size() < 2) {
+                throw new BadAttributesException("Please check params!");
+            } else {
+                Integer width = getResizeArgs().get(0);
+                Integer height = getResizeArgs().get(1);
+                if (width < 1 || height < 1) {
+                    throw new BadAttributesException("Please check params!");
+                }
+            }
 
+        }
 
+        if (getBlurRadius() != null && getBlurRadius() < 0) {
+            throw new BadAttributesException("Please check params!");
+        }
 
-        // validation
+        if (getOutputFormat() != null) {
+            boolean jpgFormat = getOutputFormat().endsWith("jpg");
+            boolean jpegFormat = getOutputFormat().endsWith("jpeg");
+            boolean pngFormat = getOutputFormat().endsWith("png");
+            if (!jpegFormat && !jpgFormat && !pngFormat) {
+                throw new BadAttributesException("Please check params!");
+            }
+        }
 
         ImageProcessor imageProcessor = new ImageProcessor();
         imageProcessor.processImage(ImageIO.read(new File(getInputPath())), this);
         return 0;
     }
 }
-
-//    public String getInputPath() {
-//        return inputPath;
-//    }
-//
-//    public String getOutputPath() {
-//        return outputPath;
-//    }
-//
-//    public Integer getQualityValue() {
-//        return qualityValue;
-//    }
-//
-//    public Integer getBlurRadius() {
-//        return blurRadius;
-//    }
-//
-//    public String getOutputFormat() {
-//        return outputFormat;
-//    }
-//
-//    public List<Integer> getCropArgs() {
-//        return cropArgs;
-//    }
-//
-//    public List<Integer> getResizeArgs() {
-//        return resizeArgs;
-//    }
-//
-//    public void setQualityValue(Integer qualityValue) {
-//        this.qualityValue = qualityValue;
-//    }
-//
-//    public void setBlurRadius(Integer blurRadius) {
-//        this.blurRadius = blurRadius;
-//    }
-//
-//    public void setOutputFormat(String outputFormat) {
-//        this.outputFormat = outputFormat;
-//    }
-//
-//    public void setCropArgs(List<Integer> cropArgs) {
-//        this.cropArgs = cropArgs;
-//    }
-//
-//    public void setResizeArgs(List<Integer> resizeArgs) {
-//        this.resizeArgs = resizeArgs;
-//    }
-//
-//    public void setOutputPath(String outputPath) {
-//        this.outputPath = outputPath;
-//    }
-//
-//    public void setInputPath(String inputPath) {
-//        this.inputPath = inputPath;
-//    }
-//}

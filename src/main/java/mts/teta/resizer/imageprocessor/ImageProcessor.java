@@ -1,21 +1,18 @@
-package mts.teta.resizer;
+package mts.teta.resizer.imageprocessor;
 
 import marvin.image.MarvinImage;
-import marvin.io.MarvinImageIO;
-import marvin.util.MarvinAttributes;
 import marvinplugins.MarvinPluginCollection;
+import mts.teta.resizer.ResizerApp;
 import net.coobird.thumbnailator.Thumbnails;
-import org.marvinproject.image.blur.gaussianBlur.GaussianBlur;
 
 import java.awt.image.BufferedImage;
 
-public class ImageProcessor extends Exception{
+public class ImageProcessor extends Exception {
 
 
     public void processImage(BufferedImage bufferedImage, ResizerApp resizerApp) throws Exception {
 
         if (resizerApp.getResizeArgs() != null) {
-            System.out.println("1");
             bufferedImage = resizeImage(
                     bufferedImage,
                     resizerApp.getResizeArgs().get(0),
@@ -23,12 +20,10 @@ public class ImageProcessor extends Exception{
         }
 
         if (resizerApp.getBlurRadius() != null) {
-            System.out.println("3");
             bufferedImage = blurImage(bufferedImage, resizerApp.getBlurRadius());
         }
 
         if (resizerApp.getCropArgs() != null) {
-            System.out.println("4");
             bufferedImage = cropImage(
                     bufferedImage,
                     resizerApp.getCropArgs().get(0),
@@ -40,12 +35,10 @@ public class ImageProcessor extends Exception{
         Thumbnails.Builder<BufferedImage> builder = Thumbnails.of(bufferedImage).scale(1);
 
         if (resizerApp.getQualityValue() != null) {
-            System.out.println("2");
             builder = compressImage(builder, resizerApp.getQualityValue());
         }
 
         if (resizerApp.getOutputFormat() != null) {
-            System.out.println("5");
             builder = convertImage(builder, resizerApp.getOutputFormat());
         }
 
@@ -68,8 +61,6 @@ public class ImageProcessor extends Exception{
 
     private BufferedImage blurImage(BufferedImage bufferedImage, Integer radius) throws Exception {
 
-        System.out.println("blur");
-        System.out.println("rad: " + radius);
         MarvinImage bImageOut = new MarvinImage(bufferedImage);
         MarvinPluginCollection.gaussianBlur(bImageOut.clone(), bImageOut, radius);
         return bImageOut.getBufferedImageNoAlpha();

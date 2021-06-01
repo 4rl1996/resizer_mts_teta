@@ -4,32 +4,29 @@ import picocli.CommandLine;
 
 import java.util.List;
 
-
 public class ConsoleAttributes {
 
+    @CommandLine.Parameters(index = "0")
+    private String inputPath;
 
-    @CommandLine.Command(name = "resizer", mixinStandardHelpOptions = true, version = "resizer 0.0.1", description = "...")
+    @CommandLine.Parameters(index = "1")
+    private String outputPath;
 
-        @CommandLine.Parameters(index = "0")
-        private String inputPath;
+    @CommandLine.Option(names = {"--resize"}, arity = "2", description = "resize the image")
+    private List<Integer> resizeArgs; // width height
 
-        @CommandLine.Parameters(index = "1")
-        private String outputPath;
+    @CommandLine.Option(names = {"--crop"}, arity = "4",
+            description = "сut out one or more rectangular regions of the image")
+    private List<Integer> cropArgs; //cropWidth, cropHeight, cropX, cropY;
 
-        @CommandLine.Option(names = {"--resize"}, arity = "2", description = "")
-        private List<Integer> resizeArgs; // width height
+    @CommandLine.Option(names = "--quality", description = "PEG/PNG compression level")
+    private Integer qualityValue;
 
-        @CommandLine.Option(names = {"--crop"}, arity = "4", description = "")
-        private List<Integer> cropArgs; //cropWidth, cropHeight, cropX, cropY;
+    @CommandLine.Option(names = "--blur", description = "reduce image noise and reduce detail levels")
+    private Integer blurRadius;
 
-        @CommandLine.Option(names = "--quality", description = "compression level")
-        private Integer qualityValue;
-
-        @CommandLine.Option(names = "--blur", description = "blur radius")
-        private Integer blurRadius;
-
-        @CommandLine.Option(names = "--format", description = "output format")
-        private String outputFormat;
+    @CommandLine.Option(names = "--format", description = "the image format type")
+    private String outputFormat;
 
     public String getInputPath() {
         return inputPath;
@@ -59,20 +56,10 @@ public class ConsoleAttributes {
         return resizeArgs;
     }
 
+    // Сеттеры используются только для тестов
+
     public void setQualityValue(Integer qualityValue) {
         this.qualityValue = qualityValue;
-    }
-
-    public void setBlurRadius(Integer blurRadius) {
-        this.blurRadius = blurRadius;
-    }
-
-    public void setOutputFormat(String outputFormat) {
-        this.outputFormat = outputFormat;
-    }
-
-    public void setCropArgs(List<Integer> cropArgs) {
-        this.cropArgs = cropArgs;
     }
 
     public void setResizeArgs(List<Integer> resizeArgs) {
