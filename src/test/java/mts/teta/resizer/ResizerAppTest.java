@@ -3,14 +3,13 @@ package mts.teta.resizer;
 import mts.teta.resizer.imageprocessor.BadAttributesException;
 import org.junit.jupiter.api.Test;
 
-import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
-import static mts.teta.resizer.utils.MD5.getMD5;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ResizerAppTest {
@@ -44,17 +43,16 @@ class ResizerAppTest {
         String absolutePathOutput = absolutePathInput.replaceFirst(FILM_COVER_SOURCE_NAME, FILM_COVER_TARGET_NAME);
 
         ResizerApp app = new ResizerApp();
-        app.setInputFile(new File(absolutePathInput));
-        app.setOutputFile(new File(absolutePathOutput));
-        app.setResizeWidth(reducedPreviewWidth);
-        app.setResizeHeight(reducedPreviewHeight);
-        app.setQuality(100);
+        app.setInputPath(absolutePathInput);
+        app.setOutputPath(absolutePathOutput);
+        app.setResizeArgs(Arrays.asList(reducedPreviewWidth, reducedPreviewHeight));
+        app.setQualityValue(100);
         app.call();
 
         BufferedImage reducedPreview = ImageIO.read(new File(absolutePathOutput));
 
-        assertEquals(reducedPreview.getWidth(), reducedPreviewWidth);
-        assertEquals(reducedPreview.getHeight(), reducedPreviewHeight);
+        assertEquals(reducedPreviewWidth, reducedPreview.getWidth());
+        assertEquals(reducedPreviewHeight, reducedPreview.getHeight());
     }
 
     @Test
@@ -71,11 +69,10 @@ class ResizerAppTest {
         String absolutePathOutput = absolutePathInput.replaceFirst(FILM_COVER_SOURCE_NAME, FILM_COVER_TARGET_NAME);
 
         ResizerApp app = new ResizerApp();
-        app.setInputFile(new File(absolutePathInput));
-        app.setOutputFile(new File(absolutePathOutput));
-        app.setResizeWidth(reducedPreviewWidth);
-        app.setResizeHeight(reducedPreviewHeight);
-        app.setQuality(100);
+        app.setInputPath(absolutePathInput);
+        app.setOutputPath(absolutePathOutput);
+        app.setResizeArgs(Arrays.asList(reducedPreviewWidth,reducedPreviewHeight));
+        app.setQualityValue(100);
         app.call();
 
         BufferedImage reducedPreview = ImageIO.read(new File(absolutePathOutput));
@@ -177,17 +174,17 @@ class ResizerAppTest {
         String absolutePathOutput = absolutePathInput.replaceFirst(AUDIO_COVER_SOURCE_NAME, AUDIO_COVER_TARGET_NAME);
 
         ResizerApp app = new ResizerApp();
-        app.setInputFile(new File(absolutePathInput + typo));
-        app.setOutputFile(new File(absolutePathOutput));
-        IIOException generatedException = null;
+        app.setInputPath(absolutePathInput + typo);
+        app.setOutputPath(absolutePathOutput);
+        BadAttributesException  generatedException = null;
         try {
             app.call();
-        } catch (IIOException e) {
+        } catch (BadAttributesException e) {
             generatedException = e;
         }
 
         assertEquals("Can't read input file!", generatedException.getMessage());
-        assertEquals(IIOException.class, generatedException.getClass());
+        assertEquals(BadAttributesException.class, generatedException.getClass());
     }
 
     @Test
@@ -199,9 +196,9 @@ class ResizerAppTest {
         String absolutePathOutput = absolutePathInput.replaceFirst(AUDIO_COVER_SOURCE_NAME, AUDIO_COVER_TARGET_NAME);
 
         ResizerApp app = new ResizerApp();
-        app.setInputFile(new File(absolutePathInput));
-        app.setOutputFile(new File(absolutePathOutput));
-        app.setQuality(-50);
+        app.setInputPath(absolutePathInput);
+        app.setOutputPath(absolutePathOutput);
+        app.setQualityValue(-50);
         BadAttributesException generatedException = null;
         try {
             app.call();
